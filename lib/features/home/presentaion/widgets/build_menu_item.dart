@@ -1,0 +1,91 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:students_rating/core/functions/print_page.dart';
+import 'package:students_rating/core/utils/widget/txt_style.dart';
+import 'package:students_rating/features/home/application/HomeBloc/students_bloc.dart';
+import 'package:students_rating/features/home/application/HomeBloc/students_events.dart';
+import 'package:students_rating/features/home/data/model/student_model.dart';
+import 'package:students_rating/features/home/presentaion/screens/home_screen.dart';
+import 'package:students_rating/features/weekRating/presentation/screens/week_rating_screen.dart';
+
+import '../../../popups/screens/student_pop_up.dart';
+
+// ignore: must_be_immutable
+class BuildMenuItem extends StatefulWidget {
+  StudentModel studentModel = StudentModel();
+
+  BuildMenuItem(this.studentModel, {super.key});
+
+  @override
+  State<BuildMenuItem> createState() => _BuildMenuItemState();
+}
+
+class _BuildMenuItemState extends State<BuildMenuItem> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 40),
+      child: BlocProvider(
+        create: (context) => StudentsBloc(),
+        child: Wrap(
+          children: [
+            ListTile(
+              leading: Image.asset("assets/day_star.png"),
+              title: const TxtStyle(
+                  "التقييم اليومي", 14, Colors.white, FontWeight.bold),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const HomeScreen()));
+              },
+            ),
+            ListTile(
+              leading: Image.asset(
+                "assets/week_star.png",
+                color: Colors.white,
+              ),
+              title: const TxtStyle(
+                  "التقييم الأسبوعي", 14, Colors.white, FontWeight.bold),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const WeekRatingScreen()));
+              },
+            ),
+            ListTile(
+              leading: Image.asset("assets/add_student.png"),
+              title: const TxtStyle(
+                  "إضافة طالب", 14, Colors.white, FontWeight.bold),
+              onTap: () {
+                StudentPopUp.show(context, true,
+                        studentModel: widget.studentModel)
+                    .then((value) {
+                  Navigator.pop(context);
+                });
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.restore_outlined, color: Colors.white),
+              title: const TxtStyle(
+                  "تصفير الدرجات", 14, Colors.white, FontWeight.bold),
+              onTap: () {
+                StudentsBloc().add(ResetGradesEvent());
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.picture_as_pdf, color: Colors.white),
+              title: const TxtStyle(
+                  "مشاركة كمستند", 14, Colors.white, FontWeight.bold),
+              onTap: () {
+                printScreen();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
