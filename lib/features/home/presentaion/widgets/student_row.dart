@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:students_rating/core/utils/colors/colors.dart';
 import 'package:students_rating/core/utils/widget/txt_style.dart';
+import 'package:students_rating/features/home/application/HomeBloc/students_bloc.dart';
 import 'package:students_rating/features/home/domain/entites/student.dart';
 import 'package:students_rating/features/popups/screens/add_grade_pop_up.dart';
 
@@ -10,7 +12,8 @@ import '../../../popups/screens/student_pop_up.dart';
 // ignore: must_be_immutable
 class StudentRow extends StatefulWidget {
   Student student;
-  StudentRow(this.student, {super.key});
+  BuildContext contextt;
+  StudentRow(this.student, {super.key, required this.contextt});
 
   @override
   State<StudentRow> createState() => _StudentRowState();
@@ -18,7 +21,7 @@ class StudentRow extends StatefulWidget {
 
 class _StudentRowState extends State<StudentRow> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(c) {
     String rate = "";
     Color rateColor,
         riotColor = widget.student.isriot == 1 ? bad : Colors.black;
@@ -44,7 +47,7 @@ class _StudentRowState extends State<StudentRow> {
         Padding(
             padding: const EdgeInsets.only(left: 24, right: 8),
             child: GestureDetector(
-                onTap: () => StudentPopUp.show(context, false,
+                onTap: () => StudentPopUp.show(widget.contextt, false,
                     studentModel: widget.student),
                 child: titleAndDivider(widget.student.studentName!, riotColor,
                     isNote: true))),

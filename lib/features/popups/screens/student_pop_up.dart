@@ -12,17 +12,18 @@ import 'package:students_rating/features/home/domain/entites/student.dart';
 import '../../home/application/HomeBloc/students_bloc.dart';
 
 class StudentPopUp {
-  static Future<dynamic> show(context, isNewStudent,
+  static Future<dynamic> show(superContext, isNewStudent,
       {Student? studentModel}) async {
     TextEditingController name = TextEditingController();
     // TextEditingController grade = TextEditingController();
     TextEditingController note = TextEditingController();
     bool? isRiot = studentModel!.isriot == 1 ? true : false;
     return await showDialog(
-        context: context,
-        builder: (context) {
-          return BlocProvider(
-            create: (context) => StudentsBloc(),
+        context: superContext,
+        builder: (_) {
+          return BlocProvider.value(
+            value: BlocProvider.of(superContext),
+            //value: superContext.read<StudentsBloc>(),
             child: BlocConsumer<StudentsBloc, StudentsStates>(
               listener: (context, state) {
                 if (state is StudentErrorState) {

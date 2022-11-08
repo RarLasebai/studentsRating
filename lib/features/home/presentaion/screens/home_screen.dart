@@ -35,8 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
             floatingActionButton: FloatingActionButton(
               backgroundColor: primary,
               onPressed: () {
+                
                 StarPopUp.show(context, "اليوم");
-        
               },
               child: const Icon(Icons.star),
             ),
@@ -61,7 +61,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             const TitleRow(),
                             ...students!
-                                .map((student) => StudentRow(student))
+                                .map((student) => BlocProvider.value(value: StudentsBloc(),
+                                child:  StudentRow(student, contextt: context,)
+                               ,))
                                 .toList()
                           ],
                         );
