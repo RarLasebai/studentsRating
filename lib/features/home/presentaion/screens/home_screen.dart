@@ -23,58 +23,58 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     List<Student>? students;
-    return BlocProvider(
-      create: (context) => StudentsBloc()..add(GetStudentsEvent()),
-      child: Directionality(
-        textDirection: TextDirection.rtl,
-        child: RepaintBoundary(
-          key: StudentsBloc().printKey,
-          child: Scaffold(
-            appBar: TopNavBar("التقييم اليومي"),
-            drawer: const NavigationDrawer(),
-            floatingActionButton: FloatingActionButton(
-              backgroundColor: primary,
-              onPressed: () {
-                
-                StarPopUp.show(context, "اليوم");
-              },
-              child: const Icon(Icons.star),
-            ),
-            body: Padding(
-                padding: const EdgeInsets.all(20),
-                child: BlocConsumer<StudentsBloc, StudentsStates>(
-                  listener: (context, studentState) {
-                    if (studentState is StudentErrorState) {
-                      const Icon(Icons.error);
-                    }
-                  },
-                  builder: (context, studentState) {
-                    if (studentState is StudentLoadedState) {
-                      students = studentState.students;
-                      if (students!.isEmpty) {
-                        return const Center(
-                          child: TxtStyle("لا يوجد طلبة مسجلين بعد!", 15,
-                              primary, FontWeight.normal),
-                        );
-                      } else {
-                        return ListView(
-                          children: [
-                            const TitleRow(),
-                            ...students!
-                                .map((student) => BlocProvider.value(value: StudentsBloc(),
-                                child:  StudentRow(student, contextt: context,)
-                               ,))
-                                .toList()
-                          ],
-                        );
-                      }
-                    } else {
-                      return const Center(
-                          child: CircularProgressIndicator(color: primary));
-                    }
-                  },
-                )),
+    var studentsBloc = context.read<StudentsBloc>()..add(GetStudentsEvent());
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: RepaintBoundary(
+        key: studentsBloc.printKey,
+        child: Scaffold(
+          appBar: TopNavBar("التقييم اليومي"),
+          drawer: const NavigationDrawer(),
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: primary,
+            onPressed: () {
+              StarPopUp.show(context, "اليوم");
+            },
+            child: const Icon(Icons.star),
           ),
+          body: Padding(
+              padding: const EdgeInsets.all(20),
+              child: BlocConsumer<StudentsBloc, StudentsStates>(
+                listener: (context, studentState) {
+                  if (studentState is StudentErrorState) {
+                    const Icon(Icons.error);
+                  }
+                },
+                builder: (context, studentState) {
+                  if (studentState is StudentLoadedState) {
+                    students = studentState.students;
+                    if (students!.isEmpty) {
+                      return const Center(
+                        child: TxtStyle("لا يوجد طلبة مسجلين بعد!", 15, primary,
+                            FontWeight.normal),
+                      );
+                    } else {
+                      return ListView(
+                        children: [
+                          const TitleRow(),
+                          ...students!
+                              .map((student) => BlocProvider.value(
+                                    value: StudentsBloc(),
+                                    child: StudentRow(
+                                      student,
+                                    ),
+                                  ))
+                              .toList()
+                        ],
+                      );
+                    }
+                  } else {
+                    return const Center(
+                        child: CircularProgressIndicator(color: primary));
+                  }
+                },
+              )),
         ),
       ),
     );

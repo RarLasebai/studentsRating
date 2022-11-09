@@ -20,8 +20,9 @@ class WeekRatingScreen extends StatelessWidget {
     List<Student>? students;
     return Directionality(
         textDirection: TextDirection.rtl,
-        child: BlocProvider(
-            create: (context) => StudentsBloc()..add(GetWeekGradesEvent()),
+        child: BlocProvider.value(
+            value: BlocProvider.of<StudentsBloc>(context)
+              ..add(GetWeekGradesEvent()),
             child: Scaffold(
                 appBar: TopNavBar("التقييم الأسبوعي"),
                 drawer: const NavigationDrawer(),

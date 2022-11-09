@@ -12,8 +12,7 @@ import '../../../popups/screens/student_pop_up.dart';
 // ignore: must_be_immutable
 class StudentRow extends StatefulWidget {
   Student student;
-  BuildContext contextt;
-  StudentRow(this.student, {super.key, required this.contextt});
+  StudentRow(this.student, {super.key});
 
   @override
   State<StudentRow> createState() => _StudentRowState();
@@ -21,7 +20,7 @@ class StudentRow extends StatefulWidget {
 
 class _StudentRowState extends State<StudentRow> {
   @override
-  Widget build(c) {
+  Widget build(context) {
     String rate = "";
     Color rateColor,
         riotColor = widget.student.isriot == 1 ? bad : Colors.black;
@@ -47,7 +46,7 @@ class _StudentRowState extends State<StudentRow> {
         Padding(
             padding: const EdgeInsets.only(left: 24, right: 8),
             child: GestureDetector(
-                onTap: () => StudentPopUp.show(widget.contextt, false,
+                onTap: () => StudentPopUp.show(context, false,
                     studentModel: widget.student),
                 child: titleAndDivider(widget.student.studentName!, riotColor,
                     isNote: true))),

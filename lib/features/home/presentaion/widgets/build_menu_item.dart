@@ -25,66 +25,64 @@ class _BuildMenuItemState extends State<BuildMenuItem> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 40),
-      child: BlocProvider(
-        create: (context) => StudentsBloc(),
-        child: Wrap(
-          children: [
-            ListTile(
-              leading: Image.asset("assets/day_star.png"),
-              title: const TxtStyle(
-                  "التقييم اليومي", 14, Colors.white, FontWeight.bold),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const HomeScreen()));
-              },
+      child: Wrap(
+        children: [
+          ListTile(
+            leading: Image.asset("assets/day_star.png"),
+            title: const TxtStyle(
+                "التقييم اليومي", 14, Colors.white, FontWeight.bold),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>  const HomeScreen(),
+                          ));
+            },
+          ),
+          ListTile(
+            leading: Image.asset(
+              "assets/week_star.png",
+              color: Colors.white,
             ),
-            ListTile(
-              leading: Image.asset(
-                "assets/week_star.png",
-                color: Colors.white,
-              ),
-              title: const TxtStyle(
-                  "التقييم الأسبوعي", 14, Colors.white, FontWeight.bold),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const WeekRatingScreen()));
-              },
-            ),
-            ListTile(
-              leading: Image.asset("assets/add_student.png"),
-              title: const TxtStyle(
-                  "إضافة طالب", 14, Colors.white, FontWeight.bold),
-              onTap: () {
-                StudentPopUp.show(context, true,
-                        studentModel: widget.studentModel)
-                    .then((value) {
-                  Navigator.pop(context);
-                });
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.restore_outlined, color: Colors.white),
-              title: const TxtStyle(
-                  "تصفير الدرجات", 14, Colors.white, FontWeight.bold),
-              onTap: () {
-                StudentsBloc().add(ResetGradesEvent());
+            title: const TxtStyle(
+                "التقييم الأسبوعي", 14, Colors.white, FontWeight.bold),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const WeekRatingScreen()));
+            },
+          ),
+          ListTile(
+            leading: Image.asset("assets/add_student.png"),
+            title:
+                const TxtStyle("إضافة طالب", 14, Colors.white, FontWeight.bold),
+            onTap: () {
+              StudentPopUp.show(context, true,
+                      studentModel: widget.studentModel)
+                  .then((value) {
                 Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.picture_as_pdf, color: Colors.white),
-              title: const TxtStyle(
-                  "مشاركة كمستند", 14, Colors.white, FontWeight.bold),
-              onTap: () {
-                printScreen();
-              },
-            ),
-          ],
-        ),
+              });
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.restore_outlined, color: Colors.white),
+            title: const TxtStyle(
+                "تصفير الدرجات", 14, Colors.white, FontWeight.bold),
+            onTap: () {
+              BlocProvider.of<StudentsBloc>(context).add(ResetGradesEvent());
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.picture_as_pdf, color: Colors.white),
+            title: const TxtStyle(
+                "مشاركة كمستند", 14, Colors.white, FontWeight.bold),
+            onTap: () {
+              printScreen(context);
+            },
+          ),
+        ],
       ),
     );
   }

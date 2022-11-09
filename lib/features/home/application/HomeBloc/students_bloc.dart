@@ -12,7 +12,6 @@ class StudentsBloc extends Bloc<StudentsEvents, StudentsStates> {
   StudentRepositoryImp studentRepositoryImp = StudentRepositoryImp();
   final GlobalKey<State<StatefulWidget>> printKey = GlobalKey();
   var students, student, count;
-  bool added = false;
   bool? isRiot = false;
 
   @override
@@ -54,6 +53,8 @@ class StudentsBloc extends Bloc<StudentsEvents, StudentsStates> {
         yield StudentsLoadingState();
         count = await studentRepositoryImp.calcStudentWeekGrade(
             event.id, event.grade, event.weekGrade);
+        students = await studentRepositoryImp.getStudents();
+        yield StudentLoadedState(students);
         // print("stu $students");
         yield CalcWeekGradeDoneState();
       }

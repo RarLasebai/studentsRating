@@ -15,14 +15,13 @@ class StudentPopUp {
   static Future<dynamic> show(superContext, isNewStudent,
       {Student? studentModel}) async {
     TextEditingController name = TextEditingController();
-    // TextEditingController grade = TextEditingController();
     TextEditingController note = TextEditingController();
     bool? isRiot = studentModel!.isriot == 1 ? true : false;
     return await showDialog(
         context: superContext,
         builder: (_) {
           return BlocProvider.value(
-            value: BlocProvider.of(superContext),
+            value: BlocProvider.of<StudentsBloc>(superContext),
             //value: superContext.read<StudentsBloc>(),
             child: BlocConsumer<StudentsBloc, StudentsStates>(
               listener: (context, state) {
@@ -32,7 +31,7 @@ class StudentPopUp {
               },
               builder: (context, state) {
                 if (state is StudentsLoadingState) {
-                  return const CircularProgressIndicator();
+                  return const Center(child: CircularProgressIndicator());
                 }
                 return StatefulBuilder(builder: (context, setState) {
                   return Dialog(
@@ -100,9 +99,11 @@ class StudentPopUp {
                                           studentGrade: 0,
                                           studentNote: note.text,
                                           isriot: 0);
-                                      StudentsBloc()
+                                      BlocProvider.of<StudentsBloc>(context)
                                           .add(AddStudentEvent(newStudent));
-                                      StudentsBloc().added = true;
+                                      // BlocProvider.of<StudentsBloc>(
+                                      //         superContext)
+                                      //     .add(AddStudentEvent(newStudent));
                                       Navigator.pop(context);
                                     }
                                   : () {
@@ -120,12 +121,13 @@ class StudentPopUp {
                                               studentWeekGrade:
                                                   studentModel.studentWeekGrade,
                                               isriot: isRiot == true ? 1 : 0);
-                                      setState(() {
-                                        StudentsBloc().add(
-                                            UpdateStudentEvent(updatedStudent));
-                                        StudentsBloc().add(GetStudentsEvent());
-                                        Navigator.pop(context);
-                                      });
+                                      BlocProvider.of<StudentsBloc>(
+                                          superContext)
+                                        ..add(
+                                            UpdateStudentEvent(updatedStudent))
+                                        ..add(GetStudentsEvent());
+
+                                      Navigator.pop(context);
                                     })
                         ],
                       ),
