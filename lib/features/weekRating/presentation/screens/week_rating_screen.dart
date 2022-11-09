@@ -12,16 +12,19 @@ import 'package:students_rating/features/weekRating/presentation/widgets/week_ti
 import '../../../../core/utils/colors/colors.dart';
 import '../../../home/domain/entites/student.dart';
 
+// ignore: must_be_immutable
 class WeekRatingScreen extends StatelessWidget {
-  const WeekRatingScreen({super.key});
+  BuildContext superContext;
+  WeekRatingScreen(this.superContext, {super.key});
 
   @override
   Widget build(BuildContext context) {
     List<Student>? students;
+    var bloc = superContext.read<StudentsBloc>()..add(GetWeekGradesEvent());
     return Directionality(
         textDirection: TextDirection.rtl,
         child: BlocProvider.value(
-            value: BlocProvider.of<StudentsBloc>(context)
+            value: BlocProvider.of<StudentsBloc>(superContext)
               ..add(GetWeekGradesEvent()),
             child: Scaffold(
                 appBar: TopNavBar("التقييم الأسبوعي"),
@@ -52,14 +55,16 @@ class WeekRatingScreen extends StatelessWidget {
                               children: [
                                 const WeekTitleRow(),
                                 ...students!
-                                    .map((student) => WeekStudentRow(student))
+                                    .map((student) =>
+                                        WeekStudentRow(student, bloc))
                                     .toList(),
                               ],
                             ),
                           ],
                         );
                       } else {
-                        return const Center(child: CircularProgressIndicator());
+                        return const Center(
+                            child: CircularProgressIndicator(color: primary));
                       }
                     })))));
   }

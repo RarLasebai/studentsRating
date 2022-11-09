@@ -9,13 +9,14 @@ import 'package:students_rating/features/home/application/HomeBloc/students_stat
 import 'package:students_rating/features/home/domain/entites/student.dart';
 
 class StarPopUp {
-  static Future<dynamic> show(context, String starType,
+  static Future<dynamic> show(superContext, String starType,
       {Student? student}) async {
     return await showDialog(
-        context: context,
-        builder: (context) {
-          return BlocProvider(
-            create: (context) => StudentsBloc()..add(GetStarOfTheDayEvent()),
+        context: superContext,
+        builder: (_) {
+          return BlocProvider.value(
+            value: BlocProvider.of<StudentsBloc>(superContext)
+              ..add(GetStarOfTheDayEvent()),
             child: BlocConsumer<StudentsBloc, StudentsStates>(
               listener: (context, state) {
                 if (state is StudentErrorState) {

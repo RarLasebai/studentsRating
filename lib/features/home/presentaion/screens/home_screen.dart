@@ -28,53 +28,57 @@ class _HomeScreenState extends State<HomeScreen> {
       textDirection: TextDirection.rtl,
       child: RepaintBoundary(
         key: studentsBloc.printKey,
-        child: Scaffold(
-          appBar: TopNavBar("التقييم اليومي"),
-          drawer: const NavigationDrawer(),
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: primary,
-            onPressed: () {
-              StarPopUp.show(context, "اليوم");
-            },
-            child: const Icon(Icons.star),
-          ),
-          body: Padding(
-              padding: const EdgeInsets.all(20),
-              child: BlocConsumer<StudentsBloc, StudentsStates>(
-                listener: (context, studentState) {
-                  if (studentState is StudentErrorState) {
-                    const Icon(Icons.error);
-                  }
-                },
-                builder: (context, studentState) {
-                  if (studentState is StudentLoadedState) {
-                    students = studentState.students;
-                    if (students!.isEmpty) {
-                      return const Center(
-                        child: TxtStyle("لا يوجد طلبة مسجلين بعد!", 15, primary,
-                            FontWeight.normal),
-                      );
-                    } else {
-                      return ListView(
-                        children: [
-                          const TitleRow(),
-                          ...students!
-                              .map((student) => BlocProvider.value(
-                                    value: StudentsBloc(),
-                                    child: StudentRow(
-                                      student,
-                                    ),
-                                  ))
-                              .toList()
-                        ],
-                      );
+        child: BlocProvider.value(
+          value:studentsBloc..add(GetStudentsEvent()),
+          child: Scaffold(
+            appBar: TopNavBar("التقييم اليومي"),
+            drawer: const NavigationDrawer(),
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: primary,
+              onPressed: () {
+                StarPopUp.show(context, "اليوم")
+                    .then((value) => studentsBloc..add(GetStudentsEvent()));
+              },
+              child: const Icon(Icons.star),
+            ),
+            body: Padding(
+                padding: const EdgeInsets.all(20),
+                child: BlocConsumer<StudentsBloc, StudentsStates>(
+                  listener: (context, studentState) {
+                    if (studentState is StudentErrorState) {
+                      const Icon(Icons.error);
                     }
-                  } else {
-                    return const Center(
-                        child: CircularProgressIndicator(color: primary));
-                  }
-                },
-              )),
+                  },
+                  builder: (context, studentState) {
+                    if (studentState is StudentLoadedState) {
+                      students = studentState.students;
+                      if (students!.isEmpty) {
+                        return const Center(
+                          child: TxtStyle("لا يوجد طلبة مسجلين بعد!", 15,
+                              primary, FontWeight.normal),
+                        );
+                      } else {
+                        return ListView(
+                          children: [
+                            const TitleRow(),
+                            ...students!
+                                .map(
+                                  (student) => StudentRow(student),
+                                )
+                                .toList()
+                          ],
+                        );
+                      }
+                    }
+                    if (studentState is StudentsLoadingState) {
+                      return const Center(
+                          child: CircularProgressIndicator(color: primary));
+                    } else {
+                      return const Center();
+                    }
+                  },
+                )),
+          ),
         ),
       ),
     );
